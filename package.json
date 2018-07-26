@@ -1,6 +1,6 @@
 {
   "name": "get-global-packages",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A little utility to find installed global packages",
   "main": "index.js",
   "scripts": {
