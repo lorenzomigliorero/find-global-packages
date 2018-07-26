@@ -1,13 +1,39 @@
-# Get Global Packages
+# Get global Packages
+A little utility to find installed global packages with npm or yarn.
+## Modules
 
-A little utility to find installed global packages with `npm` or `yarn`.
+<dl>
+<dt><a href="#module_getGlobalPackage">getGlobalPackage</a> ⇒ <code>Promise</code></dt>
+<dd></dd>
+</dl>
 
-**Kind**: global function
+## Typedefs
 
-| Param | Type | Default | Description |
+<dl>
+<dt><a href="#Params">Params</a> : <code>Object</code></dt>
+<dd></dd>
+</dl>
+
+<a name="module_getGlobalPackage"></a>
+
+## getGlobalPackage ⇒ <code>Promise</code>
+
+| Param | Type | Description |
+| --- | --- | --- |
+| params | [<code>Params</code>](#Params) | Provide appropriate props |
+
+<a name="Params"></a>
+
+## Params : <code>Object</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| startWith | <code>string</code> |  | A simple filter by string. |
+| scope | <code>string</code> |  | Get packages by @scope. |
+| filter | <code>callback</code> |  | A custom filter callback. |
 | client | <code>string</code> | <code>&quot;yarn&quot;</code> | Preferred client, npm or yarn. |
+
 
 ## Usage with yarn
 ```
@@ -33,7 +59,8 @@ const getGlobalPackages = require('get-global-packages');
 
 getGlobalPackages({
     client: 'npm',
-    startWith: '@custom-scope',
+    scope: '@custom-scope',
+    filter: name => name.includes('starter-kit'),
 }).then(packages => {
     console.log(packages);
 })

@@ -2,7 +2,7 @@ const getGlobalPackages = require('./index');
 
 it('npm global packages', async () => {
 	const packages = await getGlobalPackages({
-		startWith: '@aquestsrl',
+		scope: '@aquestsrl',
 		client: 'npm',
 	});
 	expect(Array.isArray(packages)).toBe(true);

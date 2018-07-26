@@ -4,17 +4,23 @@
   "description": "A little utility to find installed global packages",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "docs": "node docs/generate.js",
+    "docs:watch": "nodemon --exec npm run docs"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:lorenzomigliorero/find-global-packages.git"
   },
-  "keywords": ["npm", "yarn"],
+  "keywords": [
+    "npm",
+    "yarn"
+  ],
   "author": "Lorenzo Migliorero <lorenzomigliorero@gmail.com> (http://lorenzomigliorero.com/)",
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {
-    "jest": "^23.4.1"
+    "jest": "^23.4.1",
+    "jsdoc-to-markdown": "^4.0.1"
   }
 }
