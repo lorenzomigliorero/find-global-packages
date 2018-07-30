@@ -1,31 +1,38 @@
 # Get global Packages
 A little utility to find installed global packages with npm or yarn.
-## Modules
+## Functions
 
 <dl>
-<dt><a href="#module_getGlobalPackage">getGlobalPackage</a> ⇒ <code>Promise</code></dt>
+<dt><a href="#getGlobalDir">getGlobalDir(params)</a> ⇒ <code>string</code></dt>
+<dd></dd>
+<dt><a href="#getGlobalPackages">getGlobalPackages(params)</a> ⇒ <code>Array.string</code></dt>
 <dd></dd>
 </dl>
 
-## Typedefs
+<a name="getGlobalDir"></a>
 
-<dl>
-<dt><a href="#Params">Params</a> : <code>Object</code></dt>
-<dd></dd>
-</dl>
-
-<a name="module_getGlobalPackage"></a>
-
-## getGlobalPackage ⇒ <code>Promise</code>
+## getGlobalDir(params) ⇒ <code>string</code>
+**Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| params | [<code>Params</code>](#Params) | Provide appropriate props |
+| params | <code>Object</code> | Get global dir by client |
 
-<a name="Params"></a>
+**Properties**
 
-## Params : <code>Object</code>
-**Kind**: global typedef  
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| client | <code>string</code> | <code>&quot;yarn&quot;</code> | npm or yarn |
+
+<a name="getGlobalPackages"></a>
+
+## getGlobalPackages(params) ⇒ <code>Array.string</code>
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| params | <code>Object</code> | Provide appropriate props |
+
 **Properties**
 
 | Name | Type | Default | Description |
@@ -35,27 +42,17 @@ A little utility to find installed global packages with npm or yarn.
 | client | <code>string</code> | <code>&quot;yarn&quot;</code> | Preferred client, npm or yarn. |
 
 
-## Usage with yarn
+## Usage
 ```
-const getGlobalPackages = require('get-global-packages');
+const { getGlobalPackages } = require('get-global-packages');
+
+getGlobalDir().then(dir => {
+    console.log(dir); // ['lodash', 'rimraf']
+})
 
 getGlobalPackages().then(packages => {
     console.log(packages); // ['lodash', 'rimraf']
 })
-```
-
-## Usage with npm
-```
-const getGlobalPackages = require('get-global-packages');
-
-getGlobalPackages({ client: 'npm' }).then(packages => {
-    console.log(packages);
-})
-```
-
-## Get scoped packaged
-```
-const getGlobalPackages = require('get-global-packages');
 
 getGlobalPackages({
     client: 'npm',

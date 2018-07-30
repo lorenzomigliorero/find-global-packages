@@ -1,30 +1,15 @@
-## Usage with yarn
+## Usage
 ```
-const getGlobalPackages = require('get-global-packages');
+const { getGlobalPackages } = require('get-global-packages');
 
-getGlobalPackages().then(packages => {
-    console.log(packages); // ['lodash', 'rimraf']
-})
-```
+const yarnGlobalDir = getGlobalDir();
+const yarnGlobalPackages = getGlobalDir();
 
-## Usage with npm
-```
-const getGlobalPackages = require('get-global-packages');
-
-getGlobalPackages({ client: 'npm' }).then(packages => {
-    console.log(packages);
-})
-```
-
-## Get scoped packaged
-```
-const getGlobalPackages = require('get-global-packages');
-
-getGlobalPackages({
+const npmGlobalDir = getGlobalDir({ client 'npm' });
+const npmGlobalPackages = getGlobalDir();
+const npmScopedGlobalPackages = getGlobalDir({
     client: 'npm',
     scope: '@custom-scope',
     filter: name => name.includes('starter-kit'),
-}).then(packages => {
-    console.log(packages);
-})
+});
 ```
