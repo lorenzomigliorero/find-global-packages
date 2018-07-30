@@ -1,10 +1,11 @@
 {
   "name": "get-global-packages",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A little utility to find installed global packages",
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "prepublish": "node docs/generate.js",
     "docs": "node docs/generate.js",
     "docs:watch": "nodemon --exec npm run docs"
   },

@@ -46,19 +46,14 @@ A little utility to find installed global packages with npm or yarn.
 ```
 const { getGlobalPackages } = require('get-global-packages');
 
-getGlobalDir().then(dir => {
-    console.log(dir); // ['lodash', 'rimraf']
-})
+const yarnGlobalDir = getGlobalDir();
+const yarnGlobalPackages = getGlobalDir();
 
-getGlobalPackages().then(packages => {
-    console.log(packages); // ['lodash', 'rimraf']
-})
-
-getGlobalPackages({
+const npmGlobalDir = getGlobalDir({ client 'npm' });
+const npmGlobalPackages = getGlobalDir();
+const npmScopedGlobalPackages = getGlobalDir({
     client: 'npm',
     scope: '@custom-scope',
     filter: name => name.includes('starter-kit'),
-}).then(packages => {
-    console.log(packages);
-})
+});
 ```
