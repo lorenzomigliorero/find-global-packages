@@ -17,7 +17,8 @@
   },
   "os": [
     "win32",
-    "darwin"
+    "darwin",
+    "linux"
   ],
   "keywords": [
     "npm",
