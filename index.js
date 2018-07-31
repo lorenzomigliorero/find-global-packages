@@ -12,8 +12,6 @@ const getGlobalDir = ({ client = 'yarn' } = {}) => {
 	return dir;
 };
 
-getGlobalDir({ client: 'npm' })
-
 const getGlobalPackagesList = ({ client }) => {
 	if (client === 'npm') {
 		const list = execSync('npm list -g --depth=0 --json').toString();
