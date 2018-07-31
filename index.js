@@ -8,9 +8,11 @@ const { exec, execSync } = require('child_process');
 const getGlobalDir = ({ client = 'yarn' } = {}) => {
 	const command = client === 'yarn' ? 'yarn global dir' : 'npm root -g';
 	let dir = `${execSync(command).toString()}`.trim();
-	if (client === 'npm') dir = dir.replace('/node_modules', '');
+	if (client === 'npm') dir = dir.replace(/(\/|\\)node_modules/i, '');
 	return dir;
 };
+
+getGlobalDir({ client: 'npm' })
 
 const getGlobalPackagesList = ({ client }) => {
 	if (client === 'npm') {
