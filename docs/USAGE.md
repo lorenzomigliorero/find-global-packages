@@ -1,15 +1,20 @@
 ## Usage
 ```
-const { getGlobalPackages } = require('get-global-packages');
+const {
+    getGlobalDir,
+    getGlobalPackages,
+    getGlobalPackages,
+} = require('get-global-packages');
 
-const yarnGlobalDir = getGlobalDir();
-const yarnGlobalPackages = getGlobalDir();
+const globalDir = getGlobalDir({ client 'npm' });
+// /Users/foo/.nvm/versions/node/v8.11.1/lib
 
-const npmGlobalDir = getGlobalDir({ client 'npm' });
-const npmGlobalPackages = getGlobalDir();
-const npmScopedGlobalPackages = getGlobalDir({
+const globalPackages = getGlobalPackages();
+// ['react', 'react-router', 'vue', 'lodash', '@myscope/react-utils']
+
+const scopedGlobalPackages = getGlobalPackages({
     client: 'npm',
-    scope: '@custom-scope',
-    filter: name => name.includes('starter-kit'),
+    filter: name => name.includes('react'),
 });
+// ['react', 'react-router', '@myscope/react-utils']
 ```

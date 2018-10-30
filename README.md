@@ -5,7 +5,9 @@ A little utility to find installed global packages with npm or yarn.
 <dl>
 <dt><a href="#getGlobalDir">getGlobalDir(params)</a> ⇒ <code>string</code></dt>
 <dd></dd>
-<dt><a href="#getGlobalPackages">getGlobalPackages(params)</a> ⇒ <code>Array.string</code></dt>
+<dt><a href="#getGlobalPackages">getGlobalPackages(params)</a> ⇒ <code>Array.string</code> | <code>Array.Object</code></dt>
+<dd></dd>
+<dt><a href="#getRemotePackageInfo">getRemotePackageInfo(params)</a> ⇒ <code>Object</code></dt>
 <dd></dd>
 </dl>
 
@@ -26,7 +28,7 @@ A little utility to find installed global packages with npm or yarn.
 
 <a name="getGlobalPackages"></a>
 
-## getGlobalPackages(params) ⇒ <code>Array.string</code>
+## getGlobalPackages(params) ⇒ <code>Array.string</code> \| <code>Array.Object</code>
 **Kind**: global function  
 
 | Param | Type | Description |
@@ -38,22 +40,45 @@ A little utility to find installed global packages with npm or yarn.
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | scope | <code>string</code> |  | Get packages by @scope. |
-| filter | <code>callback</code> |  | A custom filter callback. |
+| filter | <code>function</code> |  | A custom filter callback. |
+| extended | <code>boolean</code> |  | Get extended info, such as name, version and description. |
+| client | <code>string</code> | <code>&quot;yarn&quot;</code> | Preferred client, npm or yarn. |
+
+<a name="getRemotePackageInfo"></a>
+
+## getRemotePackageInfo(params) ⇒ <code>Object</code>
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| params | <code>Object</code> | Provide appropriate props |
+
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| name | <code>string</code> |  | Package name. |
+| key | <code>string</code> |  | Request specific key, example: version. |
 | client | <code>string</code> | <code>&quot;yarn&quot;</code> | Preferred client, npm or yarn. |
 
 
 ## Usage
 ```
-const { getGlobalPackages } = require('get-global-packages');
+const {
+    getGlobalDir,
+    getGlobalPackages,
+    getGlobalPackages,
+} = require('get-global-packages');
 
-const yarnGlobalDir = getGlobalDir();
-const yarnGlobalPackages = getGlobalDir();
+const globalDir = getGlobalDir({ client 'npm' });
+// /Users/foo/node/node_modules
 
-const npmGlobalDir = getGlobalDir({ client 'npm' });
-const npmGlobalPackages = getGlobalDir();
-const npmScopedGlobalPackages = getGlobalDir({
+const globalPackages = getGlobalPackages();
+// ['react', 'react-router', 'vue', 'lodash', '@myscope/react-utils']
+
+const scopedGlobalPackages = getGlobalPackages({
     client: 'npm',
-    scope: '@custom-scope',
-    filter: name => name.includes('starter-kit'),
+    filter: name => name.includes('react'),
 });
+// ['react', 'react-router', '@myscope/react-utils']
 ```

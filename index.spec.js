@@ -1,27 +1,46 @@
 const {
+	getRemotePackageInfo,
 	getGlobalPackages,
 	getGlobalDir,
 } = require('./index');
 
-it('npm global dir', () => {
-	const dir = getGlobalDir({ client: 'npm' });
-	expect(typeof dir).toBe('string');
-});
-
-it('npm global packages', () => {
-	const packages = getGlobalPackages({
-		scope: '@aquestsrl',
-		client: 'npm',
+['yarn', 'npm'].forEach(client => {
+	it(`${client} global dir`, () => {
+		const dir = getGlobalDir({ client });
+		expect(typeof dir).toBe('string');
 	});
-	expect(Array.isArray(packages)).toBe(true);
-});
 
-it('yarn global dir', () => {
-	const dir = getGlobalDir({ client: 'yarn' });
-	expect(typeof dir).toBe('string');
-});
+	it(`${client} global packages`, () => {
+		const packages = getGlobalPackages({ client });
+		expect(Array.isArray(packages)).toBeTruthy();
+		if (packages.length > 0) {
+			expect(packages).toContainEqual(expect.any(String))
+		}
+	});
+	
+	it(`${client} global packages extended`, () => {
+		const packages = getGlobalPackages({
+			scope: '@aquestsrl',
+			client,
+			extended: true,
+		});
+		expect(Array.isArray(packages)).toBeTruthy();
+		if (packages.length > 0) {
+			expect(packages).toContainEqual(expect.objectContaining({
+				name: expect.any(String),
+				description: expect.any(String),
+				version: expect.any(String),
+			}));
+		}
+	});
 
-it('yarn global packages', () => {
-	const packages = getGlobalPackages();
-	expect(Array.isArray(packages)).toBe(true);
+	it(`${client} remote package info`, () => {
+		const info = getRemotePackageInfo({
+			name: 'react',
+			client,
+			key: 'description',
+		});
+		expect(typeof(info)).toBe('string');
+	})
+	
 });

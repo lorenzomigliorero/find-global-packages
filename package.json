@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "test:watch": "jest --watchAll --verbose=false",
     "docs": "node docs/generate.js",
     "docs:watch": "nodemon --exec npm run docs"
   },
