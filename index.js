@@ -1,11 +1,11 @@
-const { exec, execSync } = require('child_process');
+const { execSync } = require('child_process');
 
 const filterByKey = (obj, predicate) => Object.keys(obj)
-	.filter(key => predicate(key))
-	.reduce((out, key) => {
-		out[key] = obj[key];
-		return out;
-	}, {});
+  .filter(key => predicate(key))
+  .reduce((out, key) => {
+    out[key] = obj[key]; // eslint-disable-line
+    return out;
+  }, {});
 
 /**
  * @param {Object} params - Get global dir by client
@@ -13,19 +13,29 @@ const filterByKey = (obj, predicate) => Object.keys(obj)
  * @returns {string}
  */
 const getGlobalDir = ({ client = 'yarn' } = {}) => {
-	const command = client === 'yarn' ? 'yarn global dir' : 'npm root -g';
-	let dir = `${execSync(command).toString()}`.trim();
-	if (client === 'npm') dir = dir.replace(/(\/|\\)node_modules/i, '');
-	return dir;
+  const command = client === 'yarn' ? 'yarn global dir' : 'npm root -g';
+  let dir = `${execSync(command).toString()}`.trim();
+  if (client === 'npm') dir = dir.replace(/(\/|\\)node_modules/i, '');
+  return dir;
 };
 
+/**
+ * @param {Object} params - Get global package path
+ * @property {string} name - Package name.
+ * @property {string} client=yarn - npm or yarn
+ * @returns {string}
+ */
+const getGlobalPackagePath = ({
+  name,
+  client = 'yarn',
+}) => `${getGlobalDir({ client })}/node_modules/${name}`;
+
 const getGlobalPackagesList = ({ client }) => {
-	if (client === 'npm') {
-		const list = execSync('npm list -g --depth=0 --json').toString();
-		return JSON.parse(list);
-	} else if (client === 'yarn') {
-		return require(`${getGlobalDir({ client })}/package.json`);
-	}
+  if (client === 'npm') {
+    const list = execSync('npm list -g --depth=0 --json').toString();
+    return JSON.parse(list);
+  }
+  return require(`${getGlobalDir({ client })}/package.json`);
 };
 
 /**
@@ -37,25 +47,25 @@ const getGlobalPackagesList = ({ client }) => {
  * @returns {Array.string|Array.Object}
  */
 const getGlobalPackages = ({
-	scope = '',
-	filter,
-	extended,
-	client = 'yarn'
+  scope = '',
+  filter,
+  extended,
+  client = 'yarn',
 } = {}) => {
-	let { dependencies } = getGlobalPackagesList({ client });
-	dependencies = filterByKey(dependencies, key => key.startsWith(scope) && (typeof (filter) === 'function' ? filter(key) : true));
-	if (!extended) return Object.keys(dependencies)
-	return Object.keys(dependencies).map(key => {
-		const {
-			version,
-			description,
-		} = require(`${getGlobalDir({ client })}/node_modules/${key}/package.json`); 
-		return {
-			name: key,
-			version,
-			description,
-		}
-	});
+  let { dependencies } = getGlobalPackagesList({ client });
+  dependencies = filterByKey(dependencies, key => key.startsWith(scope) && (typeof (filter) === 'function' ? filter(key) : true));
+  if (!extended) return Object.keys(dependencies);
+  return Object.keys(dependencies).map((key) => {
+    const {
+      version,
+      description,
+    } = require(`${getGlobalDir({ client })}/node_modules/${key}/package.json`);
+    return {
+      name: key,
+      version,
+      description,
+    };
+  });
 };
 
 /**
@@ -66,21 +76,21 @@ const getGlobalPackages = ({
  * @returns {Object}
  */
 const getRemotePackageInfo = ({
-	client = 'yarn',
-	name,
-	key = ''
+  client = 'yarn',
+  name,
+  key = '',
 }) => {
-	if (client === 'npm') {
-		const info = execSync(`npm view ${name} --json ${key}`).toString();
-		return JSON.parse(info);
-	} else if (client === 'yarn') {
-		const info = execSync(`yarn info ${name} --json ${key}`).toString();
-		return JSON.parse(info).data;
-	}
+  if (client === 'npm') {
+    const info = execSync(`npm view ${name} --json ${key}`).toString();
+    return JSON.parse(info);
+  }
+  const info = execSync(`yarn info ${name} --json ${key}`).toString();
+  return JSON.parse(info).data;
 };
 
 module.exports = {
-	getGlobalPackages,
-	getGlobalDir,
-	getRemotePackageInfo,
+  getGlobalPackages,
+  getRemotePackageInfo,
+  getGlobalDir,
+  getGlobalPackagePath,
 };
