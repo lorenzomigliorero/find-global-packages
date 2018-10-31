@@ -1,9 +1,9 @@
 {
     "post_commit_commands": [
-        "yarn run test",
-        "yarn run docs"
+        "npm run test",
+        "npm run docs"
     ],
     "post_complete_commands": [
-        "yarn publish"
+        "npm publish"
     ]
 }
