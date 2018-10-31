@@ -5,6 +5,8 @@ A little utility to find installed global packages with npm or yarn.
 <dl>
 <dt><a href="#getGlobalDir">getGlobalDir(params)</a> ⇒ <code>string</code></dt>
 <dd></dd>
+<dt><a href="#getGlobalPackagePath">getGlobalPackagePath(params)</a> ⇒ <code>string</code></dt>
+<dd></dd>
 <dt><a href="#getGlobalPackages">getGlobalPackages(params)</a> ⇒ <code>Array.string</code> | <code>Array.Object</code></dt>
 <dd></dd>
 <dt><a href="#getRemotePackageInfo">getRemotePackageInfo(params)</a> ⇒ <code>Object</code></dt>
@@ -24,6 +26,22 @@ A little utility to find installed global packages with npm or yarn.
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
+| client | <code>string</code> | <code>&quot;yarn&quot;</code> | npm or yarn |
+
+<a name="getGlobalPackagePath"></a>
+
+## getGlobalPackagePath(params) ⇒ <code>string</code>
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| params | <code>Object</code> | Get global package path |
+
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| name | <code>string</code> |  | Package name. |
 | client | <code>string</code> | <code>&quot;yarn&quot;</code> | npm or yarn |
 
 <a name="getGlobalPackages"></a>
@@ -66,12 +84,16 @@ A little utility to find installed global packages with npm or yarn.
 ```
 const {
     getGlobalDir,
+    getGlobalPackagePath,
     getGlobalPackages,
     getGlobalPackages,
 } = require('get-global-packages');
 
-const globalDir = getGlobalDir({ client 'npm' });
-// /Users/foo/node/node_modules
+const globalDir = getGlobalDir({ client: 'npm' });
+// /Users/foo/.nvm/versions/node/v8.11.1/lib
+
+const globalPackagePath = getGlobalDir({ name: 'npm-packlist-cli' });
+/Users/lmigliorero/.config/yarn/global/node_modules/npm-packlist-cli
 
 const globalPackages = getGlobalPackages();
 // ['react', 'react-router', 'vue', 'lodash', '@myscope/react-utils']
