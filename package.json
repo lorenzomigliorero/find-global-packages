@@ -27,7 +27,9 @@
   ],
   "author": "Lorenzo Migliorero <lorenzomigliorero@gmail.com> (http://lorenzomigliorero.com/)",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "request": "^2.88.0"
+  },
   "devDependencies": {
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
