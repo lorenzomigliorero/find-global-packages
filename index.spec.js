@@ -1,8 +1,9 @@
 const {
-  getRemotePackageInfo,
-  getGlobalPackages,
-  getGlobalPackagePath,
   getGlobalDir,
+  getGlobalPackagePath,
+  getGlobalPackages,
+  getRemotePackageInfo,
+  getRemotePackages,
 } = require('./index');
 
 ['yarn', 'npm'].forEach((client) => {
@@ -16,7 +17,6 @@ const {
       name: 'yarn',
       client,
     });
-    console.log(path);
     expect(typeof path).toBe('string');
   });
 
@@ -52,4 +52,18 @@ const {
     });
     expect(typeof (info)).toBe('string');
   });
+});
+
+it('Get remote packages', async () => {
+  const packages = await getRemotePackages({
+    text: '@aquestsrl/',
+  });
+  expect(Array.isArray(packages)).toBeTruthy();
+  if (packages.length > 0) {
+    expect(packages).toContainEqual(expect.objectContaining({
+      name: expect.any(String),
+      description: expect.any(String),
+      version: expect.any(String),
+    }));
+  }
 });

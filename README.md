@@ -3,24 +3,26 @@ A little utility to find installed global packages with npm or yarn.
 ## Functions
 
 <dl>
-<dt><a href="#getGlobalDir">getGlobalDir(params)</a> ⇒ <code>string</code></dt>
+<dt><a href="#getGlobalDir">getGlobalDir(options)</a> ⇒ <code>string</code></dt>
 <dd></dd>
-<dt><a href="#getGlobalPackagePath">getGlobalPackagePath(params)</a> ⇒ <code>string</code></dt>
+<dt><a href="#getGlobalPackagePath">getGlobalPackagePath(options)</a> ⇒ <code>string</code></dt>
 <dd></dd>
-<dt><a href="#getGlobalPackages">getGlobalPackages(params)</a> ⇒ <code>Array.string</code> | <code>Array.Object</code></dt>
+<dt><a href="#getGlobalPackages">getGlobalPackages(options)</a> ⇒ <code>Array.string</code> | <code>Array.Object</code></dt>
 <dd></dd>
-<dt><a href="#getRemotePackageInfo">getRemotePackageInfo(params)</a> ⇒ <code>Object</code></dt>
+<dt><a href="#getRemotePackageInfo">getRemotePackageInfo(options)</a> ⇒ <code>Object</code></dt>
+<dd></dd>
+<dt><a href="#getRemotePackages">getRemotePackages(options)</a> ⇒ <code>Promise.Array.Object</code></dt>
 <dd></dd>
 </dl>
 
 <a name="getGlobalDir"></a>
 
-## getGlobalDir(params) ⇒ <code>string</code>
+## getGlobalDir(options) ⇒ <code>string</code>
 **Kind**: global function  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| params | <code>Object</code> | Get global dir by client |
+| Param | Type |
+| --- | --- |
+| options | <code>Object</code> | 
 
 **Properties**
 
@@ -28,14 +30,21 @@ A little utility to find installed global packages with npm or yarn.
 | --- | --- | --- | --- |
 | client | <code>string</code> | <code>&quot;yarn&quot;</code> | npm or yarn |
 
+**Example**  
+```js
+getGlobalDir();
+
+// returns
+'/Users/foo/.config/yarn/global'
+```
 <a name="getGlobalPackagePath"></a>
 
-## getGlobalPackagePath(params) ⇒ <code>string</code>
+## getGlobalPackagePath(options) ⇒ <code>string</code>
 **Kind**: global function  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| params | <code>Object</code> | Get global package path |
+| Param | Type |
+| --- | --- |
+| options | <code>Object</code> | 
 
 **Properties**
 
@@ -44,14 +53,21 @@ A little utility to find installed global packages with npm or yarn.
 | name | <code>string</code> |  | Package name. |
 | client | <code>string</code> | <code>&quot;yarn&quot;</code> | npm or yarn |
 
+**Example**  
+```js
+getGlobalPackagePath({ name: 'jest' });
+
+// returns
+'/Users/foo/.config/yarn/global/node_modules/jest'
+```
 <a name="getGlobalPackages"></a>
 
-## getGlobalPackages(params) ⇒ <code>Array.string</code> \| <code>Array.Object</code>
+## getGlobalPackages(options) ⇒ <code>Array.string</code> \| <code>Array.Object</code>
 **Kind**: global function  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| params | <code>Object</code> | Provide appropriate props |
+| Param | Type |
+| --- | --- |
+| options | <code>Object</code> | 
 
 **Properties**
 
@@ -62,14 +78,39 @@ A little utility to find installed global packages with npm or yarn.
 | extended | <code>boolean</code> |  | Get extended info, such as name, version and description. |
 | client | <code>string</code> | <code>&quot;yarn&quot;</code> | Preferred client, npm or yarn. |
 
+**Example**  
+```js
+getGlobalPackages();
+
+// returns
+['jest', 'vue-cli']
+```
+**Example**  
+```js
+getGlobalPackages({ extended: true });
+
+// returns
+[
+  {
+    name: 'jest',
+    version: '23.6.0',
+    description: 'Delightful JavaScript Testing'.
+  },
+  {
+    name: 'vue-cli',
+    version: '2.9.6',
+    description: 'A simple CLI for scaffolding Vue.js projects.'
+  }
+]
+```
 <a name="getRemotePackageInfo"></a>
 
-## getRemotePackageInfo(params) ⇒ <code>Object</code>
+## getRemotePackageInfo(options) ⇒ <code>Object</code>
 **Kind**: global function  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| params | <code>Object</code> | Provide appropriate props |
+| Param | Type |
+| --- | --- |
+| options | <code>Object</code> | 
 
 **Properties**
 
@@ -79,28 +120,54 @@ A little utility to find installed global packages with npm or yarn.
 | key | <code>string</code> |  | Request specific key, example: version. |
 | client | <code>string</code> | <code>&quot;yarn&quot;</code> | Preferred client, npm or yarn. |
 
+**Example**  
+```js
+getRemotePackageInfo({
+  name: 'vue-cli',
+  key: 'version'
+})
 
-## Usage
+//returns
+'2.9.6'
 ```
-const {
-    getGlobalDir,
-    getGlobalPackagePath,
-    getGlobalPackages,
-    getGlobalPackages,
-} = require('get-global-packages');
+**Example**  
+```js
+getRemotePackageInfo( name: 'vue-cli' })
 
-const globalDir = getGlobalDir({ client: 'npm' });
-// /Users/foo/.nvm/versions/node/v8.11.1/lib
+//returns
+{
+  name: 'vue-cli',
+  version: '2.9.6',
+  description: 'A simple CLI for scaffolding Vue.js projects.'
+}
+```
+<a name="getRemotePackages"></a>
 
-const globalPackagePath = getGlobalDir({ name: 'npm-packlist-cli' });
-/Users/lmigliorero/.config/yarn/global/node_modules/npm-packlist-cli
+## getRemotePackages(options) ⇒ <code>Promise.Array.Object</code>
+**Kind**: global function  
 
-const globalPackages = getGlobalPackages();
-// ['react', 'react-router', 'vue', 'lodash', '@myscope/react-utils']
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | Read here for params documentation https://github.com/npm/registry/blob/master/docs/REGISTRY-API.md#get-v1search |
 
-const scopedGlobalPackages = getGlobalPackages({
-    client: 'npm',
-    filter: name => name.includes('react'),
-});
-// ['react', 'react-router', '@myscope/react-utils']
+**Example**  
+```js
+getRemotePackages({ search: 'react' }).then((response) => {
+  console.log(response);
+})
+
+// returns
+[
+  {
+    name: 'react',
+    version: '16.6.0',
+    description: 'React is a JavaScript library for building user interfaces.'.
+  },
+  {
+    name: 'react-router',
+    version: '4.3.1',
+    description: 'Declarative routing for React'.
+  },
+  ...
+]
 ```

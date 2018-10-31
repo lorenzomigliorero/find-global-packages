@@ -1,6 +1,6 @@
 {
   "name": "get-global-packages",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "A little utility to find installed global packages",
   "main": "index.js",
   "scripts": {
@@ -27,7 +27,9 @@
   ],
   "author": "Lorenzo Migliorero <lorenzomigliorero@gmail.com> (http://lorenzomigliorero.com/)",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "request": "^2.88.0"
+  },
   "devDependencies": {
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",

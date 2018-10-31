@@ -1,3 +1,4 @@
+const request = require('request');
 const { execSync } = require('child_process');
 
 const filterByKey = (obj, predicate) => Object.keys(obj)
@@ -8,9 +9,14 @@ const filterByKey = (obj, predicate) => Object.keys(obj)
   }, {});
 
 /**
- * @param {Object} params - Get global dir by client
+ * @param {Object} options
  * @property {string} client=yarn - npm or yarn
  * @returns {string}
+ * @example
+ * getGlobalDir();
+ *
+ * // returns
+ * '/Users/foo/.config/yarn/global'
  */
 const getGlobalDir = ({ client = 'yarn' } = {}) => {
   const command = client === 'yarn' ? 'yarn global dir' : 'npm root -g';
@@ -20,10 +26,15 @@ const getGlobalDir = ({ client = 'yarn' } = {}) => {
 };
 
 /**
- * @param {Object} params - Get global package path
+ * @param {Object} options
  * @property {string} name - Package name.
  * @property {string} client=yarn - npm or yarn
  * @returns {string}
+ * @example
+ * getGlobalPackagePath({ name: 'jest' });
+ *
+ * // returns
+ * '/Users/foo/.config/yarn/global/node_modules/jest'
  */
 const getGlobalPackagePath = ({
   name,
@@ -39,12 +50,33 @@ const getGlobalPackagesList = ({ client }) => {
 };
 
 /**
- * @param {Object} params - Provide appropriate props
+ * @param {Object} options
  * @property {string} scope - Get packages by @scope.
  * @property {function} filter - A custom filter callback.
  * @property {boolean} extended - Get extended info, such as name, version and description.
  * @property {string} client=yarn - Preferred client, npm or yarn.
  * @returns {Array.string|Array.Object}
+ * @example
+ * getGlobalPackages();
+ *
+ * // returns
+ * ['jest', 'vue-cli']
+ * @example
+ * getGlobalPackages({ extended: true });
+ *
+ * // returns
+ * [
+ *   {
+ *     name: 'jest',
+ *     version: '23.6.0',
+ *     description: 'Delightful JavaScript Testing'.
+ *   },
+ *   {
+ *     name: 'vue-cli',
+ *     version: '2.9.6',
+ *     description: 'A simple CLI for scaffolding Vue.js projects.'
+ *   }
+ * ]
  */
 const getGlobalPackages = ({
   scope = '',
@@ -69,11 +101,28 @@ const getGlobalPackages = ({
 };
 
 /**
- * @param {Object} params - Provide appropriate props
+ * @param {Object} options
  * @property {string} name - Package name.
  * @property {string} key - Request specific key, example: version.
  * @property {string} client=yarn - Preferred client, npm or yarn.
  * @returns {Object}
+ * @example
+ * getRemotePackageInfo({
+ *   name: 'vue-cli',
+ *   key: 'version'
+ * })
+ *
+ * //returns
+ * '2.9.6'
+ * @example
+ * getRemotePackageInfo( name: 'vue-cli' })
+ *
+ * //returns
+ * {
+ *   name: 'vue-cli',
+ *   version: '2.9.6',
+ *   description: 'A simple CLI for scaffolding Vue.js projects.'
+ * }
  */
 const getRemotePackageInfo = ({
   client = 'yarn',
@@ -88,8 +137,53 @@ const getRemotePackageInfo = ({
   return JSON.parse(info).data;
 };
 
+/**
+ * @param {Object} options Read here for params documentation https://github.com/npm/registry/blob/master/docs/REGISTRY-API.md#get-v1search
+ * @returns {Promise.Array.Object}
+ * @example
+ * getRemotePackages({ search: 'react' }).then((response) => {
+ *   console.log(response);
+ * })
+ *
+ * // returns
+ * [
+ *   {
+ *     name: 'react',
+ *     version: '16.6.0',
+ *     description: 'React is a JavaScript library for building user interfaces.'.
+ *   },
+ *   {
+ *     name: 'react-router',
+ *     version: '4.3.1',
+ *     description: 'Declarative routing for React'.
+ *   },
+ *   ...
+ * ]
+ */
+const getRemotePackages = (params = {}) => new Promise((resolve) => {
+  const url = 'https://registry.npmjs.org/-/v1/search';
+  request.get({
+    url,
+    qs: params,
+    json: true,
+  }, (err, response, body) => {
+    resolve(body.objects.map(({
+      package: {
+        name,
+        description,
+        version,
+      },
+    }) => ({
+      name,
+      description,
+      version,
+    })));
+  });
+});
+
 module.exports = {
   getGlobalPackages,
+  getRemotePackages,
   getRemotePackageInfo,
   getGlobalDir,
   getGlobalPackagePath,
