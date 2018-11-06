@@ -9,6 +9,8 @@ A little utility to find installed global packages with npm or yarn.
 <dd></dd>
 <dt><a href="#getGlobalPackages">getGlobalPackages(options)</a> ⇒ <code>Array.string</code> | <code>Array.Object</code></dt>
 <dd></dd>
+<dt><a href="#checkIfPackageIsGloballyInstalled">checkIfPackageIsGloballyInstalled(options)</a> ⇒ <code>Boolean</code> | <code>Object</code></dt>
+<dd></dd>
 <dt><a href="#getRemotePackageInfo">getRemotePackageInfo(options)</a> ⇒ <code>Object</code></dt>
 <dd></dd>
 <dt><a href="#getRemotePackages">getRemotePackages(options)</a> ⇒ <code>Promise.Array.Object</code></dt>
@@ -102,6 +104,42 @@ getGlobalPackages({ extended: true });
     description: 'A simple CLI for scaffolding Vue.js projects.'
   }
 ]
+```
+<a name="checkIfPackageIsGloballyInstalled"></a>
+
+## checkIfPackageIsGloballyInstalled(options) ⇒ <code>Boolean</code> \| <code>Object</code>
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| options | <code>Object</code> | 
+
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| extended | <code>boolean</code> |  | Get extended info, such as name, version and description. |
+| client | <code>string</code> | <code>&quot;yarn&quot;</code> | Preferred client, npm or yarn. |
+
+**Example**  
+```js
+checkIfPackageIsGloballyInstalled({ name: 'vue-cli' });
+
+// returns true
+```
+**Example**  
+```js
+getGlobalPackages({
+  extended: true,
+  name: 'vue-cli'
+});
+
+// returns
+{
+  name: 'vue-cli',
+  version: '2.9.6',
+  description: 'A simple CLI for scaffolding Vue.js projects.'
+}
 ```
 <a name="getRemotePackageInfo"></a>
 
