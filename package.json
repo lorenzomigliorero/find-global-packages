@@ -1,6 +1,6 @@
 {
   "name": "npm-node-utils",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "A little utility to get info about installed and remote npm packages.",
   "main": "index.js",
   "scripts": {
