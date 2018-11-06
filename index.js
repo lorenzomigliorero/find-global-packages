@@ -102,6 +102,42 @@ const getGlobalPackages = ({
 
 /**
  * @param {Object} options
+ * @property {boolean} extended - Get extended info, such as name, version and description.
+ * @property {string} client=yarn - Preferred client, npm or yarn.
+ * @returns {Boolean|Object}
+ * @example
+ * checkIfPackageIsGloballyInstalled({ name: 'vue-cli' });
+ *
+ * // returns true
+ * @example
+ * getGlobalPackages({
+ *   extended: true,
+ *   name: 'vue-cli'
+ * });
+ *
+ * // returns
+ * {
+ *   name: 'vue-cli',
+ *   version: '2.9.6',
+ *   description: 'A simple CLI for scaffolding Vue.js projects.'
+ * }
+ */
+const checkIfPackageIsGloballyInstalled = ({
+  client = 'yarn',
+  extended,
+  name,
+}) => {
+  const packages = getGlobalPackages({
+    client,
+    extended,
+    filter: key => key === name,
+  });
+  const pkg = packages.find(p => (extended ? p.name === name : p === name));
+  return !extended ? !!pkg : pkg || false;
+};
+
+/**
+ * @param {Object} options
  * @property {string} name - Package name.
  * @property {string} key - Request specific key, example: version.
  * @property {string} client=yarn - Preferred client, npm or yarn.
@@ -186,5 +222,6 @@ module.exports = {
   getRemotePackages,
   getRemotePackageInfo,
   getGlobalDir,
+  checkIfPackageIsGloballyInstalled,
   getGlobalPackagePath,
 };
