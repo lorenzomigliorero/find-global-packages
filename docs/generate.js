@@ -1,11 +1,13 @@
-const { writeFile, readFileSync } = require('fs');
+const { writeFile } = require('fs');
 const path = require('path');
 const jsdoc2md = require('jsdoc-to-markdown');
 
+const pkg = require('../package.json');
+
 const docs = jsdoc2md.renderSync({ files: path.resolve(__dirname, '../index.js') });
-const header = readFileSync(path.resolve(__dirname, 'BANNER.md'));
 
 writeFile(path.resolve(__dirname, '../README.md'), `
-${header}
+# ${pkg.name}
+${pkg.description}
 ${docs}
 `.trim(), () => {});

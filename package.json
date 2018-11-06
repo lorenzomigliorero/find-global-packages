@@ -1,7 +1,7 @@
 {
-  "name": "get-global-packages",
+  "name": "npm-node-utils",
   "version": "1.5.0",
-  "description": "A little utility to find installed global packages",
+  "description": "A little utility to get info about installed and remote npm packages.",
   "main": "index.js",
   "scripts": {
     "test": "jest",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:lorenzomigliorero/find-global-packages.git"
+    "url": "git@github.com:lorenzomigliorero/npm-node-utils.git"
   },
   "engines": {
     "node": ">=6.14.2"

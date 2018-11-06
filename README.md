@@ -1,5 +1,5 @@
-# Get global Packages
-A little utility to find installed global packages with npm or yarn.
+# npm-node-utils
+A little utility to get info about installed and remote npm packages.
 ## Functions
 
 <dl>
