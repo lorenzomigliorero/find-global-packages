@@ -14,6 +14,12 @@ describe('remote package', () => {
         key: 'description',
       });
       expect(typeof (info)).toBe('string');
+
+      /** Required parameter error handling */
+      expect(() => getRemotePackageInfo({
+        client,
+        key: 'description',
+      })).toThrow();
     });
   });
 

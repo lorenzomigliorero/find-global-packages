@@ -47,6 +47,11 @@ describe('global function', () => {
         name: 'yarn',
       });
       expect(typeof packageIsInstalled).toBe('boolean');
+
+      /** Required parameter error handling */
+      expect(() => checkIfPackageIsGloballyInstalled({
+        client,
+      })).toThrow();
     });
 
     it(`${client} check if package is globally installed - extended`, () => {
