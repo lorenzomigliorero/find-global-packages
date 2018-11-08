@@ -1,5 +1,20 @@
 const request = require('request');
-const { execSync } = require('child_process');
+const { spawnSync } = require('child_process');
+
+const defaultParameterError = (msg) => {
+  throw new Error(`Missing ${msg} parameter`);
+};
+
+const getSpawn = ({
+  command,
+  args = [],
+}) => {
+  const spawn = spawnSync(command, args);
+  const { stderr, stdout } = spawn;
+  const err = stderr.toString();
+  if (err) throw new Error(err);
+  return stdout.toString().trim();
+};
 
 const filterByKey = (obj, predicate) => Object.keys(obj)
   .filter(key => predicate(key))
@@ -19,8 +34,10 @@ const filterByKey = (obj, predicate) => Object.keys(obj)
  * '/Users/foo/.config/yarn/global'
  */
 const getGlobalDir = ({ client = 'yarn' } = {}) => {
-  const command = client === 'yarn' ? 'yarn global dir' : 'npm root -g';
-  let dir = `${execSync(command).toString()}`.trim();
+  let dir = getSpawn({
+    command: client,
+    args: client === 'npm' ? ['root', '-g'] : ['global', 'dir'],
+  });
   if (client === 'npm') dir = dir.replace(/(\/|\\)node_modules/i, '');
   return dir;
 };
@@ -43,8 +60,11 @@ const getGlobalPackagePath = ({
 
 const getGlobalPackagesList = ({ client }) => {
   if (client === 'npm') {
-    const list = execSync('npm list -g --depth=0 --json').toString();
-    return JSON.parse(list);
+    const list = getSpawn({
+      command: 'npm',
+      args: ['list', '-g', '--depth=0', '--json'],
+    });
+    return JSON.parse(list.toString());
   }
   return require(`${getGlobalDir({ client })}/package.json`);
 };
@@ -80,8 +100,8 @@ const getGlobalPackagesList = ({ client }) => {
  */
 const getGlobalPackages = ({
   scope = '',
-  filter,
-  extended,
+  filter = undefined,
+  extended = false,
   client = 'yarn',
 } = {}) => {
   let { dependencies } = getGlobalPackagesList({ client });
@@ -124,8 +144,8 @@ const getGlobalPackages = ({
  */
 const checkIfPackageIsGloballyInstalled = ({
   client = 'yarn',
-  extended,
-  name,
+  extended = false,
+  name = defaultParameterError('name'),
 }) => {
   const packages = getGlobalPackages({
     client,
@@ -162,15 +182,14 @@ const checkIfPackageIsGloballyInstalled = ({
  */
 const getRemotePackageInfo = ({
   client = 'yarn',
-  name,
+  name = defaultParameterError('name'),
   key = '',
 }) => {
-  if (client === 'npm') {
-    const info = execSync(`npm view ${name} --json ${key}`).toString();
-    return JSON.parse(info);
-  }
-  const info = execSync(`yarn info ${name} --json ${key}`).toString();
-  return JSON.parse(info).data;
+  const spawn = getSpawn({
+    command: client,
+    args: [client === 'npm' ? 'view' : 'info', name, '--json', key],
+  });
+  return client === 'yarn' ? JSON.parse(spawn).data : spawn;
 };
 
 /**
@@ -196,13 +215,17 @@ const getRemotePackageInfo = ({
  *   ...
  * ]
  */
-const getRemotePackages = (params = {}) => new Promise((resolve) => {
+const getRemotePackages = (params = {}) => new Promise((resolve, reject) => {
   const url = 'https://registry.npmjs.org/-/v1/search';
   request.get({
     url,
     qs: params,
     json: true,
   }, (err, response, body) => {
+    if (err) {
+      reject(err);
+      return;
+    }
     resolve(body.objects.map(({
       package: {
         name,
