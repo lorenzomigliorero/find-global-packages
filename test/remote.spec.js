@@ -5,7 +5,7 @@ const {
 const { extended } = require('./types');
 const { clients } = require('./constants');
 
-describe.skip('remote package', () => {
+describe('remote package', () => {
   clients.forEach((client) => {
     it(`${client} remote package info`, () => {
       const info = getRemotePackageInfo({
