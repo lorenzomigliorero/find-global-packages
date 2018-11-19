@@ -1,19 +1,21 @@
 const request = require('request');
-const { spawnSync } = require('child_process');
+const { execSync } = require('child_process');
 
 const defaultParameterError = (msg) => {
   throw new Error(`Missing ${msg} parameter`);
 };
 
-const getSpawn = ({
+const execSheelCommand = ({
   command,
   args = [],
 }) => {
-  const spawn = spawnSync(command, args);
-  const { stderr, stdout } = spawn;
-  const err = stderr.toString();
-  if (err) throw new Error(err);
-  return stdout.toString().trim();
+  try {
+    const out = execSync(`${command} ${args.reduce((a, b) => `${a} ${b}`, '')}`);
+    return out.toString().trim();
+  } catch (err) {
+    if (err) throw new Error(err);
+  }
+  return false;
 };
 
 const filterByKey = (obj, predicate) => Object.keys(obj)
@@ -34,7 +36,7 @@ const filterByKey = (obj, predicate) => Object.keys(obj)
  * '/Users/foo/.config/yarn/global'
  */
 const getGlobalDir = ({ client = 'yarn' } = {}) => {
-  let dir = getSpawn({
+  let dir = execSheelCommand({
     command: client,
     args: client === 'npm' ? ['root', '-g'] : ['global', 'dir'],
   });
@@ -60,7 +62,7 @@ const getGlobalPackagePath = ({
 
 const getGlobalPackagesList = ({ client }) => {
   if (client === 'npm') {
-    const list = getSpawn({
+    const list = execSheelCommand({
       command: 'npm',
       args: ['list', '-g', '--depth=0', '--json'],
     });
@@ -185,7 +187,7 @@ const getRemotePackageInfo = ({
   name = defaultParameterError('name'),
   key = '',
 }) => {
-  const spawn = getSpawn({
+  const spawn = execSheelCommand({
     command: client,
     args: [client === 'npm' ? 'view' : 'info', name, '--json', key],
   });
