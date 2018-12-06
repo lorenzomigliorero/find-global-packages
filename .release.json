@@ -1,9 +1,11 @@
 {
-    "post_commit_commands": [
-        "npm run test",
-        "npm run docs"
-    ],
-    "post_complete_commands": [
-        "npm publish"
-    ]
+  "pre_commit_commands": [
+    "npm run test"
+  ],
+  "post_commit_commands": [
+      "npm run docs"
+  ],
+  "post_complete_commands": [
+      "npm publish"
+  ]
 }
