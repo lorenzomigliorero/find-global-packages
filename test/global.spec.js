@@ -9,7 +9,7 @@ const { clients } = require('./constants');
 
 describe('global function', () => {
   clients.forEach((client) => {
-    it.only(`${client} global dir`, () => {
+    it(`${client} global dir`, () => {
       const dir = getGlobalDir({ client });
       expect(typeof dir).toBe('string');
     });

@@ -7,10 +7,11 @@ const defaultParameterError = (msg) => {
 
 const execSheelCommand = ({
   command,
+  silentError = true,
   args = [],
 }) => {
   try {
-    const out = execSync(`${command} ${args.reduce((a, b) => `${a} ${b}`, '')}`);
+    const out = execSync(`${command} ${args.reduce((a, b) => `${a} ${b}`, '')}`, { stdio: ['pipe', 'pipe', silentError ? 'ignore' : 'pipe'] });
     return out.toString().trim();
   } catch (err) {
     if (err) throw new Error(err);
